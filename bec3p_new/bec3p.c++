@@ -303,13 +303,16 @@ int _tmain(int argc, _TCHAR* argv[])
 	complex<Float> foo4;
 	complex<Float> foo5X, foo5Y, foo5Z;
 
+#ifdef BARY
 printf("Reading visible matter grav. potential...\n");
 fflush(stdout);
 
-	read_Ub();
+read_Ub();
+
 
 printf("Read.\n");
 fflush(stdout);
+#endif
 
 #ifdef USECL
 	initializeCL();
@@ -1333,6 +1336,8 @@ void get_phi()	// Grav. potential via Poisson's Eq.
 	fflush(stderr);
 #endif
 
+
+
 	// Add static baryonic potential
 	for (i = 0; i <= Nx; i++)
 		for (j = 0; j <= Ny; j++)
@@ -1341,8 +1346,13 @@ void get_phi()	// Grav. potential via Poisson's Eq.
 		double x = xl + i * dx;
 		double y = yl + j * dy;
 		double z = zl + k * dz;
-		phiU(i, j, k) = phi(i, j, k) + Ub(x, y, z);
+		phiU(i, j, k) = phi(i, j, k) 
+		#ifdef BARY
+		+ Ub(x, y, z)
+		#endif
+		;
 	}
+
 
 }
 
