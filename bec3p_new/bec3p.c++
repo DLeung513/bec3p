@@ -5,7 +5,7 @@
 #include "stdafx.h"
 
 #include "parameters3.h"
-#include "phi-interpolator.h"
+// #include "phi-interpolator.h"
 
 #ifdef USECL
 #include <CL/opencl.h>
@@ -17,7 +17,7 @@
 
 using namespace std;
 
-const int Nn = (Nx + 1) * (Ny + 1) * (Nz + 1);
+const int Nn = (Nx + 1) * (Ny + 1) * (Nz + 1); // Number of total grid points
 
 #define NRMN 100
 #define NRMC 1000
@@ -27,7 +27,8 @@ const int Nn = (Nx + 1) * (Ny + 1) * (Nz + 1);
 complex<Float> eye, dt;
 Float t, dx, dy, dz, idx2, idy2, idz2;
 
-complex<Float> *psi = new complex<Float>[Nn];
+// Here flatten all the 3D data into 1D by ijk(i,j,k) function
+complex<Float> *psi = new complex<Float>[Nn];  
 complex<Float> *psi_n = new complex<Float>[Nn];
 Float *dens = new Float[Nn];
 Float *phi = new Float[Nn];
@@ -35,8 +36,8 @@ Float *phiU = new Float[Nn];
 Float *UU = new Float[Nn];
 Float *res = new Float[Nn];
 
-#define ijk(i,j,k) ((((i) * (Ny + 1)) + (j)) * (Nz + 1) + (k))
-
+// Here map all the 1D data back to 3D by spicifying the counting method
+#define ijk(i,j,k) ((((i) * (Ny + 1)) + (j)) * (Nz + 1) + (k)) // Start from 0, increase by z then y then x. So (1,0,0) is the (Nz+1)*(Ny+1)-th point
 #define psi(i,j,k) (psi[ijk(i,j,k)])
 #define psi_n(i,j,k) (psi_n[ijk(i,j,k)])
 #define density(i,j,k) (dens[ijk(i,j,k)])
@@ -636,7 +637,9 @@ fflush(stdout);
 }
 
 //*********************************************************************
-Float init(int i, int j, int k)		// Initial state
+// Initial state
+//*********************************************************************
+Float init(int i, int j, int k)		
 {
 	Float F, x, y, z, r;
 
@@ -660,6 +663,8 @@ Float init(int i, int j, int k)		// Initial state
 }
 
 //**********************************************************************
+// Energy in lab frame, i.e. not calculating the rotational energy
+//**********************************************************************
 Float energy(Float mu, FILE *file41)
 {
 	Float EK, EU, EI, EG, mdpsisq;
@@ -671,15 +676,15 @@ Float energy(Float mu, FILE *file41)
 		for (j = 1; j < Ny; j++)
 			for (i = 1; i < Nx; i++)
 	{
-		mdpsisq = SQ(real(psi(i, j, k))) + SQ(imag(psi(i, j, k)));
-		EI += SQ(mdpsisq);
-		EG += 0.5 * (phi(i, j, k)) * mdpsisq;
+		mdpsisq = SQ(real(psi(i, j, k))) + SQ(imag(psi(i, j, k))); // density rho
+		EI += SQ(mdpsisq); // rho^2
+		EG += 0.5 * (phi(i, j, k)) * mdpsisq; // Question: Why 1/2? 
 		EU += (
 #ifdef GRAV
 			0.5 *		// See Wang, PRD64, 124009
 #endif
 			phiU(i, j, k) - mu) * mdpsisq;
-		EK += SQ(real(psi(i + 1, j, k) - psi(i - 1, j, k))) * idx2;
+		EK += SQ(real(psi(i + 1, j, k) - psi(i - 1, j, k))) * idx2; // kinetic energy in  
 		EK += SQ(imag(psi(i + 1, j, k) - psi(i - 1, j, k))) * idx2;
 		EK += SQ(real(psi(i, j + 1, k) - psi(i, j - 1, k))) * idy2;
 		EK += SQ(imag(psi(i, j + 1, k) - psi(i, j - 1, k))) * idy2;
@@ -689,12 +694,15 @@ Float energy(Float mu, FILE *file41)
 	EI *= (Float)0.5 * c * dV;
 	EU *= dV;
 	EG *= dV;
-	EK *= (Float)0.125 * dV;
+	EK *= (Float)0.125 * dV;  // 1/2*((\psi_i+1)-(\psi_i-1))/2dx)^2=1/8*...
 	fprintf(file41, "%lg\t%lg\t%lg\t%lg\t%lg\n", t, EK, EU, EG, EI);
 	fflush(file41);
 	return EK + EU + EI;
 }
 
+//**********************************************************************
+//The function get_U computes the potential term (without rotation) in 
+// the Gross-Pitaevskii equation: H = kinetic + U - Omega*L
 //**********************************************************************
 void get_U(Float mu)	// Find U
 {
@@ -707,7 +715,9 @@ void get_U(Float mu)	// Find U
 }
 
 //*********************************************************************
-void get_Vtr()	// Trapping potential
+// Trapping potential
+//*********************************************************************
+void get_Vtr()	
 {
 	int i, j, k;
 	const Float d = (Float)0.25 * (SQ(xr - xl) + SQ(yr - yl) + SQ(zr - zl));
@@ -723,7 +733,9 @@ void get_Vtr()	// Trapping potential
 }
 
 //*********************************************************************
-Float fermi(Float mu, int i, int j, int k)	// Fermi-Thomas initial state
+// Fermi-Thomas initial state, not used when GRAV is defined
+//*********************************************************************
+Float fermi(Float mu, int i, int j, int k)	
 {
 	Float x, y, z, r2, R2;
 	const Float norm = 15 * N * sqrt(2 * mu) * SQ(mu) / pi;
@@ -737,6 +749,10 @@ Float fermi(Float mu, int i, int j, int k)	// Fermi-Thomas initial state
 	else return 0.0;
 }
 
+//**********************************************************************
+// Calculate d_n, which is used to find psi_n+1 by Thomas algorirhm
+// By ADI, we propogate along x for each y. So d/dy=0 and we fix j for each iteration
+// Notedd - i*omega(xd/dy-yd/dx)/3 can be approximated by finite difference
 //**********************************************************************
 void calc_rhs_x(complex<Float> foo1,	// Find psi_n= Rx(psi)
 			complex<Float> foo3, complex<Float> foo4, complex<Float> foo5)
@@ -782,6 +798,10 @@ void calc_rhs_x(complex<Float> foo1,	// Find psi_n= Rx(psi)
 }
 
 //**********************************************************************
+// Calculate d_n, which is used to find psi_n+1 by Thomas algorirhm
+// By ADI, we propogate along y for each x. So d/dx=0 and we fix i for each iteration
+// Notedd - i*omega(xd/dy-yd/dx)/3 can be approximated by finite difference
+//**********************************************************************
 void calc_rhs_y(complex<Float> foo1,	// Find psi_n=Ry(psi)
 			complex<Float> foo3, complex<Float> foo4, complex<Float> foo5)
 {
@@ -825,6 +845,9 @@ void calc_rhs_y(complex<Float> foo1,	// Find psi_n=Ry(psi)
 #endif
 }
 
+//**********************************************************************
+// Calculate d_n, which is used to find psi_n+1 by Thomas algorirhm
+// By ADI, we propogate along z, so d/dx = d/dy = 0
 //**********************************************************************
 void calc_rhs_z(complex<Float> foo3,	// Find psi_n=Ry(psi)
 				complex<Float> foo4, complex<Float> foo5)
