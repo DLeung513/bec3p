@@ -1,8 +1,8 @@
 #! /bin/bash
 
-outfile=""
-vrotfile=""
-plttype="dens"
+outfile="./data/"
+vrotfile="./data/"
+plttype="./data/dens"
 datadim=3
 plane=Z
 norm=10001000
