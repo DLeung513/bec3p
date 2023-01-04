@@ -306,7 +306,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	complex<Float> foo4;
 	complex<Float> foo5X, foo5Y, foo5Z;
 
-	 int mkdirretval;
+	int mkdirretval;
     //mkdirretval=light::mkpath("foo2/bar",0755);
     //mkdirretval=light::mkpath("./lsl/foo2/bar");
     mkdirretval=light::mkpath("data");
@@ -340,7 +340,6 @@ fflush(stdout);
 	norm0 = N;
      
 	// Initial conditions
-	createFolder();
 printf("Setting initial conditions...\n");
 fflush(stdout);
 
