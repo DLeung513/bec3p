@@ -22,12 +22,12 @@ const Float pi = 4 * atan((Float)1);
 // User-configurable parameters begin here
 
 // Self-gravitating or trapped condensate?
-#define GRAV
+// #define GRAV
 
 // Grid size
-#define Nx 120
-#define Ny 120
-#define Nz 120
+#define Nx 40//120
+#define Ny 40//120
+#define Nz 40//120
 
 // A comment on units: The Gross-Pitaevskii equation is solved in a
 // "dimensionless" form where the particle mass (M) and the reduced Planck
@@ -56,7 +56,7 @@ const Float pi = 4 * atan((Float)1);
 //
 // By way of example, if the Bose star above was of 1 solar mass (~ 2e30 kg),
 // it would contain N = 2e76 particles. The gravitational constant in the units
-// chosen above is 6.67e-11 m^3/kg/s^2 = 6.67e-78 [L]^3/[M][T]^2. Choosing
+// chosen above is 6.67e-11 m^3/kg/s^??2 = 6.67e-78 [L]^3/[M][T]^2. Choosing
 // k = 1e-38 allows us to rescale these quantities such that N = 2, G = 0.0667.
 // This is especially useful if single-precision arithmetic is used (e.g., when
 // using OPENCL on a GPU.)
@@ -97,12 +97,12 @@ const Float xr = 120.0f, yr = 120.0f, zr = 120.0f;
 
 #ifndef KERNEL
 // Simulation parameters
-const Float tau = 5;					// Time step (units of [T])
-const int time_n = 100000;				// Number of iterations to run
+const Float tau = 1; //5;					// Time step (units of [T])
+const int time_n = 10;//100000;				// Number of iterations to run
 const Float G = 0.0105;				// Newton's constant (may be scaled)
 const Float N = 50*0.00112;					// Particle number (may be scaled)
 const Float R = 2.0;					// Size of initial condensate (in [L])
-const Float a = 0.5 * G * SQ(R/pi);		// Scattering length (TF default)
+const Float a = 0;//0.5 * G * SQ(R/pi);		// Scattering length (TF default)
 const Float c = 4 * pi * a;				// BEC interaction coupling strength
 const Float ex = 0.0;					// Softening parameters
 const Float ey = 0.0;
@@ -110,6 +110,7 @@ const Float ez = 0.0;
 const Float omega0 = 0e-4;				// Initial angular velocity (in rad/[T])
 const Float gamma0 = 0.0;				// Softening parameter
 const int despin_n = 0;				// When to stop spinning the condensate
+const Float omg = 7;                // harmonic trap in rad/[T]
 
 // Iteration tolerances
 const Float tolGPE = 1e-4;				// GPE nonlinear term iteration
