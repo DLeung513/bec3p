@@ -2,7 +2,7 @@
 
 outfile="./data/"
 vrotfile="./data/"
-plttype="./data/dens"
+plttype="dens"
 datadim=3
 plane=Z
 norm=10001000
