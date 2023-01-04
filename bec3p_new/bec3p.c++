@@ -3,6 +3,9 @@
 // This version dated 2013/08/05.
 
 #include "stdafx.h"
+#include <io.h>
+#include <direct.h>
+#include <string>
 
 #include "parameters3.h"
 // #include "phi-interpolator.h"
@@ -16,7 +19,7 @@
 #pragma warning(disable:4996)
 
 using namespace std;
-
+using std::string;
 const int Nn = (Nx + 1) * (Ny + 1) * (Nz + 1); // Number of total grid points
 
 #define NRMN 100
@@ -26,6 +29,7 @@ const int Nn = (Nx + 1) * (Ny + 1) * (Nz + 1); // Number of total grid points
 
 complex<Float> eye, dt;
 Float t, dx, dy, dz, idx2, idy2, idz2;
+string path = prefix;
 
 // Here flatten all the 3D data into 1D by ijk(i,j,k) function
 complex<Float> *psi = new complex<Float>[Nn];  
@@ -253,6 +257,12 @@ void finalizeCL()
 }
 #endif
 
+int createFolder()
+{
+	if (_access(prefix.c_str(), 0) == -1) // Try to access folder ./data/, if not accessible
+	_mkdir(prefix.c_str());               // Create a folder
+}
+
 //**********************************************************************
 void loopdetect(Float *nrma, Float norm, const char *pdir, int &nrmc)
 {
@@ -332,7 +342,7 @@ fflush(stdout);
 	norm0 = N;
      
 	// Initial conditions
-
+	createFolder();
 printf("Setting initial conditions...\n");
 fflush(stdout);
 
@@ -379,7 +389,7 @@ fflush(stdout);
 
 	// Initial state
 
-	file34 = fopen("psi34.dat", "w");
+	file34 = fopen("./data/psi34.dat", "w");
 	t = 0.0;
 	itime = 0;
 	ktime = 0;
@@ -448,7 +458,7 @@ printf("Initiate the iteration...\n");
 fflush(stdout);
 
 	// get initial U 
-	file41 = fopen("erg41.dat", "w");
+	file41 = fopen("./data/erg41.dat", "w");
 	get_U(mu);
 
 	norm =  get_normsimp();
@@ -458,10 +468,10 @@ fflush(stdout);
 
 	movie(itime);	// Output data for contour plots
 
-	file21 = fopen("psi21.dat", "w");
-	file22 = fopen("psi22.dat", "w");
-	file23 = fopen("psi23.dat", "w");
-	file24 = fopen("psi24.dat", "w");
+	file21 = fopen("./data/psi21.dat", "w");
+	file22 = fopen("./data/psi22.dat", "w");
+	file23 = fopen("./data/psi23.dat", "w");
+	file24 = fopen("./data/psi24.dat", "w");
 
 	// Time loop
 
@@ -538,7 +548,7 @@ fflush(stdout);
 
 		if (itime > 10 && itime % nstep1 == 0)
 		{
-			file33 = fopen("psi33.dat", "w");
+			file33 = fopen("./data/psi33.dat", "w");
 
 			for (i = 0; i <= Nx; i++)
 			{
@@ -1136,9 +1146,9 @@ void movieZ(int itime)	// Outputs files
 	int i, j, k;
 	FILE *file8, *file10, *file11;
 
-	sprintf(ch, "densZ%07d.dat", itime);
-	sprintf(cs, "phasZ%07d.dat", itime);
-	sprintf(cu, "gravZ%07d.dat", itime);
+	sprintf(ch, "./data/densZ%07d.dat", itime);
+	sprintf(cs, "./data/phasZ%07d.dat", itime);
+	sprintf(cu, "./data/gravZ%07d.dat", itime);
 	file8 = fopen(ch, "w");
 	file10 = fopen(cs, "w");
 	file11 = fopen(cu, "w");
@@ -1177,9 +1187,9 @@ void movieX(int itime)	// Outputs files
 	int i, j, k;
 	FILE *file8, *file10, *file11;
 
-	sprintf(ch, "densX%07d.dat", itime);
-	sprintf(cs, "phasX%07d.dat", itime);
-	sprintf(cu, "gravX%07d.dat", itime);
+	sprintf(ch, "./data/densX%07d.dat", itime);
+	sprintf(cs, "./data/phasX%07d.dat", itime);
+	sprintf(cu, "./data/gravX%07d.dat", itime);
 	file8 = fopen(ch, "w");
 	file10 = fopen(cs, "w");
 	file11 = fopen(cu, "w");
@@ -1218,9 +1228,9 @@ void movieY(int itime)	// Outputs files
 	int i, j, k;
 	FILE *file8, *file10, *file11;
 
-	sprintf(ch, "densY%07d.dat", itime);
-	sprintf(cs, "phasY%07d.dat", itime);
-	sprintf(cu, "gravY%07d.dat", itime);
+	sprintf(ch, "./data/densY%07d.dat", itime);
+	sprintf(cs, "./data/phasY%07d.dat", itime);
+	sprintf(cu, "./data/gravY%07d.dat", itime);
 	file8 = fopen(ch, "w");
 	file10 = fopen(cs, "w");
 	file11 = fopen(cu, "w");
