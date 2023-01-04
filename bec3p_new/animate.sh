@@ -1,7 +1,7 @@
 #! /bin/bash
 
-outfile="data"
-vrotfile="data"
+outfile=""
+vrotfile=""
 plttype="dens"
 datadim=3
 plane=Z
@@ -68,7 +68,7 @@ then
 fi
 
 using="1:2:(abs(\$3)"
-mincp=`cat densZ0000000.dat | cut -d ' ' -f 1 | perl -e '$min=1e99;while(<STDIN>){$next=$_;if(($next ne "")and(0.0+$next<$min)and(0.0+$next>=0)){$min=0.0+$next;}}print 1.1*$min;'`
+mincp=`cat ./data/densZ0000000.dat | cut -d ' ' -f 1 | perl -e '$min=1e99;while(<STDIN>){$next=$_;if(($next ne "")and(0.0+$next<$min)and(0.0+$next>=0)){$min=0.0+$next;}}print 1.1*$min;'`
 
 if [[ "$plttype" == "accel" ]] ; then
 (
@@ -178,7 +178,7 @@ else
 			echo set contour base
 			echo set cntrparam bspline
 			echo set view map
-			echo "MAX=`cat densZ${norm:1:7}.dat | cut -d ' ' -f 4 | perl -e '$max=0;while(<STDIN>){$next=$_;if(0.0+$next>$max){$max=$next;}}print $max;'`"
+			echo "MAX=`cat ./data/densZ${norm:1:7}.dat | cut -d ' ' -f 4 | perl -e '$max=0;while(<STDIN>){$next=$_;if(0.0+$next>$max){$max=$next;}}print $max;'`"
 			echo set cntrparam levels increment 0,MAX/12,MAX
 			echo unset clabel
 			echo unset pm3d
