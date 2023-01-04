@@ -94,12 +94,12 @@ const Float pi = 4 * atan((Float)1);
 // Physical size of simulation volume in units of [L]
 //const Float xl = -120.0f, yl = -120.0f, zl = -120.0f;
 //const Float xr = 120.0f, yr = 120.0f, zr = 120.0f;
-const Float xl = -1.0f, yl = -1.0f, zl = -1.0f;
-const Float xr = 1.0f, yr = 1.0f, zr = 1.0f;
+const Float xl = -5.0f, yl = -5.0f, zl = -5.0f;
+const Float xr = 5.0f, yr = 5.0f, zr = 5.0f;
 
 #ifndef KERNEL
 // Simulation parameters
-const Float tau = 1; //5;					// Time step (units of [T])
+const Float tau = 0.1; //5;					// Time step (units of [T])
 const int time_n = 10;//100000;				// Number of iterations to run
 const Float G = 0.0105;				// Newton's constant (may be scaled)
 const Float N = 50*0.00112;					// Particle number (may be scaled)
@@ -112,7 +112,7 @@ const Float ez = 0.0;
 const Float omega0 = 0e-4;				// Initial angular velocity (in rad/[T])
 const Float gamma0 = 0.0;				// Softening parameter
 const int despin_n = 0;				// When to stop spinning the condensate
-const Float omg = 700;                // harmonic trap in rad/[T]
+const Float omg = 7;                // harmonic trap in rad/[T]
 
 // Iteration tolerances
 const Float tolGPE = 1e-4;				// GPE nonlinear term iteration
