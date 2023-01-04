@@ -751,8 +751,9 @@ Float fermi(Float mu, int i, int j, int k)
 	z = zl + k * dz;
 	r2 = (1 + ex) * SQ(x) + (1 + ey) * SQ(y) + (1 + ez) * SQ(z);
 	R2 = SQ(R);
-	if (r2 < R2) return (Float)(1 - r2) * norm;//(Float)sqrt((0.5 * (R2 - r2)) * norm);
-	else return 0.0;
+	//if (r2 < R2) return (Float)(1 - r2) * norm;//(Float)sqrt((0.5 * (R2 - r2)) * norm);
+	//else return 0.0;
+	return (Float)exp(-r2) * norm;
 }
 
 //**********************************************************************
