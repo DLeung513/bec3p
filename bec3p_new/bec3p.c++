@@ -309,7 +309,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	int mkdirretval;
     //mkdirretval=light::mkpath("foo2/bar",0755);
     //mkdirretval=light::mkpath("./lsl/foo2/bar");
-    mkdirretval=light::mkpath("data");
+    mkdirretval=light::mkpath(path.c_str());
     std::cout << mkdirretval << '\n';
 #ifdef BARY
 printf("Reading visible matter grav. potential...\n");
