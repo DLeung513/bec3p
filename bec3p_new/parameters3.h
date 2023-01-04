@@ -95,8 +95,8 @@ std::string prefix = "./data/";
 // Physical size of simulation volume in units of [L]
 //const Float xl = -120.0f, yl = -120.0f, zl = -120.0f;
 //const Float xr = 120.0f, yr = 120.0f, zr = 120.0f;
-const Float xl = -5.0f, yl = -5.0f, zl = -5.0f;
-const Float xr = 5.0f, yr = 5.0f, zr = 5.0f;
+const Float xl = -50.0f, yl = -50.0f, zl = -50.0f;
+const Float xr = 50.0f, yr = 50.0f, zr = 50.0f;
 
 #ifndef KERNEL
 // Simulation parameters
