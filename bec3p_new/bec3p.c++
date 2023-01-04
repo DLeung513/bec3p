@@ -350,7 +350,7 @@ fflush(stdout);
 #ifdef GRAV
 	mu = 0;
 #else
-	mu = 0.5 / SQ(R);
+	mu = 0;//0.5 / SQ(R);
 #endif
 
 	xi = (eye + gamma) / (gamma * gamma + 1);
