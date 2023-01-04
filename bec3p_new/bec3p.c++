@@ -3,13 +3,11 @@
 // This version dated 2013/08/05.
 
 #include "stdafx.h"
-#include <io.h>
-#include <direct.h>
-#include <string>
+
 
 #include "parameters3.h"
 // #include "phi-interpolator.h"
-
+#include "mkpath.h"
 #ifdef USECL
 #include <CL/opencl.h>
 #include <SDKCommon.hpp>
@@ -257,11 +255,6 @@ void finalizeCL()
 }
 #endif
 
-int createFolder()
-{
-	if (_access(prefix.c_str(), 0) == -1) // Try to access folder ./data/, if not accessible
-	_mkdir(prefix.c_str());               // Create a folder
-}
 
 //**********************************************************************
 void loopdetect(Float *nrma, Float norm, const char *pdir, int &nrmc)
@@ -313,6 +306,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	complex<Float> foo4;
 	complex<Float> foo5X, foo5Y, foo5Z;
 
+	 int mkdirretval;
+    //mkdirretval=light::mkpath("foo2/bar",0755);
+    //mkdirretval=light::mkpath("./lsl/foo2/bar");
+    mkdirretval=light::mkpath("data");
+    std::cout << mkdirretval << '\n';
 #ifdef BARY
 printf("Reading visible matter grav. potential...\n");
 fflush(stdout);
