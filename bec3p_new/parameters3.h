@@ -25,9 +25,9 @@ const Float pi = 4 * atan((Float)1);
 // #define GRAV
 
 // Grid size
-#define Nx 40//120
-#define Ny 40//120
-#define Nz 40//120
+#define Nx 80//120
+#define Ny 80//120
+#define Nz 80//120
 
 std::string prefix = "./data/";
 // A comment on units: The Gross-Pitaevskii equation is solved in a
@@ -95,12 +95,12 @@ std::string prefix = "./data/";
 // Physical size of simulation volume in units of [L]
 //const Float xl = -120.0f, yl = -120.0f, zl = -120.0f;
 //const Float xr = 120.0f, yr = 120.0f, zr = 120.0f;
-const Float xl = -50.0f, yl = -50.0f, zl = -50.0f;
-const Float xr = 50.0f, yr = 50.0f, zr = 50.0f;
+const Float xl = -5.0f, yl = -5.0f, zl = -5.0f;
+const Float xr = 5.0f, yr = 5.0f, zr = 5.0f;
 
 #ifndef KERNEL
 // Simulation parameters
-const Float tau = 1; //5;					// Time step (units of [T])
+const Float tau = 0.1; //5;					// Time step (units of [T])
 const int time_n = 10;//100000;				// Number of iterations to run
 const Float G = 0.0105;				// Newton's constant (may be scaled)
 const Float N = 50*0.00112;					// Particle number (may be scaled)
