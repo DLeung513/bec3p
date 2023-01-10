@@ -545,14 +545,14 @@ fflush(stdout);
 
 		if (itime > 10 && itime % nstep1 == 0)
 		{
-			file33 = fopen("./data/psi33.dat", "w");
+			file33 = fopen("./data/psidense.dat", "w");
 
 			for (i = 0; i <= Nx; i++)
 			{
 				for (j = 0; j <= Ny; j++)
 					for (k = 0; k <= Nz; k++)
-						fprintf(file33, "%lg %lg %lg\n", xl + i * dx,
-												yl + j * dy, density(i, j, k));
+						fprintf(file33, "%lg %lg %lg %lg\n", xl + i * dx,
+												yl + j * dy, zl + k * dz, density(i, j, k));
 				fprintf(file33, "\n");  // For Gnuplot
 			}
 			fclose(file33);
