@@ -386,7 +386,7 @@ fflush(stdout);
 
 	// Initial state
 
-	file34 = fopen("./data/psi34.dat", "w");
+	file34 = fopen("./data/psi_ini.dat", "w");
 	t = 0.0;
 	itime = 0;
 	ktime = 0;
@@ -408,7 +408,7 @@ fflush(stdout);
 			psi(i, j, k) = fermi(mu, i, j, k);
 #endif
 			fprintf(file34, "%lg %lg %lg %lg\n", xl + i * dx, yl + j * dy,
-											zl + k * dz, real(psi(i, j, k)));
+											zl + k * dz, psi(i, j, k));
 		}
 		fprintf(file34, "\n");	// For Gnuplot
 	}
