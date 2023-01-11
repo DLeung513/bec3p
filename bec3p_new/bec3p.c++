@@ -757,14 +757,16 @@ Float fermi(Float mu, int i, int j, int k)
 	Float x, y, z, r2, R2;
 	// const Float norm = 15 * N * sqrt(2 * mu) * SQ(mu) / pi;
 	const Float norm = sqrt(N)*pow(omg/pi,3/4);
+	printf("norm is %11.4lg", norm);
+	fflush(stdout);
 	x = xl + i * dx;
 	y = yl + j * dy;
 	z = zl + k * dz;
 	r2 = (1 + ex) * SQ(x) + (1 + ey) * SQ(y) + (1 + ez) * SQ(z);
-	R2 = SQ(R);
+	// R2 = SQ(R);
 	//if (r2 < R2) return (Float)(1 - r2) * norm;//(Float)sqrt((0.5 * (R2 - r2)) * norm);
 	//else return 0.0;
-	return (Float)exp(-omg*r2/2) * norm;
+	return (Float)exp(-omg*r2/2.) * norm;
 }
 
 //**********************************************************************
