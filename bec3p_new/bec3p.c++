@@ -624,6 +624,8 @@ fflush(stdout);
 					for (k = 0; k <= Nz; k++)
 				psi(i, j, k) *= renorm;
 			get_density();
+			printf("Checking at N=%6d, t=%11.4lg, P=%11.4lg\n", itime, t, norm);
+			fflush(stdout);
 #ifdef GRAV
 			get_phi();
 #endif
@@ -1375,5 +1377,5 @@ void get_density()
 	for (i = 0; i <= Nx; i++)
 		for (j = 0; j <= Ny; j++)
 			for (k = 0; k <= Nz; k++)
-		density(i, j, k) = SQ(real(psi(i, j, k))) + SQ(imag(psi(i, j, k)));
+				density(i, j, k) = SQ(real(psi(i, j, k))) + SQ(imag(psi(i, j, k)));
 }
