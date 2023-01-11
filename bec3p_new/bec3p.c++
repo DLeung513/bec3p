@@ -297,7 +297,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	Float norm, norm0;
 	Float E0, E1 = 0, E2 = 0;
 	int i, j, k, itime, ktime;
-	FILE *file21, *file22, *file23, *file24, *file33, *file34, *file41;
+	FILE *file21, *file22, *file23, *file24, *file33, *file34, *file41, *filephi;
 	Float nrma[NRMN];
 	int nrmc;
 	complex<Float> foo1X, foo1XS, foo1Y, foo1YS, foo1ZS;
@@ -451,6 +451,19 @@ fflush(stdout);
 	get_phi();
 #else
 	get_Vtr();
+	// Save trap information
+	filephi = fopen("./data/phi_ini.dat", "w");
+	for (i = 0; i <= Nx; i++)
+	{
+		for (j = 0; j <= Ny; j++)
+			for (k = 0; k <= Nz; k++)
+		{
+				fprintf(filephi, "%lg %lg %lg %lg\n", xl + i * dx, yl + j * dy,
+											zl + k * dz, phi(i, j, k));
+		}
+		fprintf(filephi, "\n");	// For Gnuplot
+	}
+	fclose(filephi);
 #endif
 
 printf("Initiate the iteration...\n");
