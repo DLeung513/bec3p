@@ -103,7 +103,7 @@ const Float xr = 5.0f, yr = 5.0f, zr = 5.0f;
 const Float tau = 0.1; //5;					// Time step (units of [T])
 const int time_n = 10;//100000;				// Number of iterations to run
 const Float G = 0.0105;				// Newton's constant (may be scaled)
-const Float N = 50*0.00112;					// Particle number (may be scaled)
+const Float N = 1;//50*0.00112;					// Particle number (may be scaled)
 const Float R = 2.0;					// Size of initial condensate (in [L])
 const Float a = 0;//0.5 * G * SQ(R/pi);		// Scattering length (TF default)
 const Float c = 4 * pi * a;				// BEC interaction coupling strength
