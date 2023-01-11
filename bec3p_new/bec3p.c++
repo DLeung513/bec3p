@@ -305,7 +305,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	complex<Float> foo3X, foo3XS, foo3Y, foo3YS, foo3Z, foo3ZS;
 	complex<Float> foo4;
 	complex<Float> foo5X, foo5Y, foo5Z;
-
+	double norm_ini;
 	int mkdirretval;
     //mkdirretval=light::mkpath("foo2/bar",0755);
     //mkdirretval=light::mkpath("./lsl/foo2/bar");
@@ -413,7 +413,9 @@ fflush(stdout);
 		fprintf(file34, "\n");	// For Gnuplot
 	}
 	fclose(file34);
-
+	norm_ini = get_normsimp();
+	printf("Initial norm is P=%11.4lg\n", norm_ini);
+	fflush(stdout);
 printf("Setting up boundary conditions...\n");
 fflush(stdout);
 
@@ -623,9 +625,9 @@ fflush(stdout);
 				for (j = 0; j <= Ny; j++)
 					for (k = 0; k <= Nz; k++)
 				psi(i, j, k) *= renorm;
-			norm = get_normsimp();
-			printf("Checking at N=%6d, t=%11.4lg, P=%11.4lg\n", itime, t, norm);
-			fflush(stdout);
+			// norm = get_normsimp();
+			// printf("Checking at N=%6d, t=%11.4lg, P=%11.4lg\n", itime, t, norm);
+			// fflush(stdout);
 #ifdef GRAV
 			get_phi();
 #endif
