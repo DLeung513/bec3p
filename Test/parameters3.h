@@ -111,7 +111,7 @@ const Float ez = 0.0;
 const Float omega0 = 0.0;//0.0001;				// Initial angular velocity (in rad/[T])
 const Float gamma0 = 0.0;				// Softening parameter
 const int despin_n = 1;				// When to stop spinning the condensate
-const Float omg = 20.0;                // harmonic trap in rad/[T]
+const Float aho = 1.0;                // harmonic length (in [L])
 
 // Iteration tolerances
 const Float tolGPE = 1e-4;				// GPE nonlinear term iteration

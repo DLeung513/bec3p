@@ -8,6 +8,7 @@
 #include "parameters3.h"
 // #include "phi-interpolator.h"
 #include "mkpath.h"
+#include <cmath>
 #ifdef USECL
 #include <CL/opencl.h>
 #include <SDKCommon.hpp>
@@ -748,17 +749,13 @@ void get_Vtr()
 {
 	int i, j, k;
 	//const Float d = (Float)0.25 * (SQ(xr - xl) + SQ(yr - yl) + SQ(zr - zl));
-	const Float d = 0;
 	for (k = 0; k <= Nz; k++)
 		for (j = 0; j <= Ny; j++)
 			for (i = 0; i <= Nx; i++)
 	{
-		//phi(i, j, k) = (Float)0.5 * ((1 + ex) * SQ(xl + i * dx) +
-		//						(1 + ey) * SQ(yl + j * dy) +
-		//						(1 + ez) * SQ(zl + k * dz) - d) / SQ(SQ(R));
-		phi(i, j, k) = (Float)0.5 *SQ(omg)* ((1 + ex) * SQ(xl + i * dx) +
+		phi(i, j, k) = (Float)0.5 * ((1 + ex) * SQ(xl + i * dx) +
 								(1 + ey) * SQ(yl + j * dy) +
-								(1 + ez) * SQ(zl + k * dz));
+								(1 + ez) * SQ(zl + k * dz)) / SQ(SQ(aho));
 	}
 	}
 
@@ -769,15 +766,15 @@ Float fermi(Float mu, int i, int j, int k)
 {
 	Float x, y, z, r2, R2;
 	// const Float norm = 15 * N * sqrt(2 * mu) * SQ(mu) / pi;
-	const Float norm = sqrt(N)*pow(omg/pi, 3.0/4.0);
 	x = xl + i * dx;
 	y = yl + j * dy;
 	z = zl + k * dz;
 	r2 = (1 + ex) * SQ(x) + (1 + ey) * SQ(y) + (1 + ez) * SQ(z);
+	const Float norm = sqrt(N)/pow(pi, 3.0/4.0)/pow(aho, 3.0/2.0);
 	// R2 = SQ(R);
 	//if (r2 < R2) return (Float)(1 - r2) * norm;//(Float)sqrt((0.5 * (R2 - r2)) * norm);
 	//else return 0.0;
-	return (Float)exp(-omg*r2/2.) * norm;
+	return (double)exp(-r2/(2.0*SQ(aho))) * norm;
 }
 
 //**********************************************************************
