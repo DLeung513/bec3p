@@ -4,9 +4,11 @@
 
 #include "stdafx.h"
 
+
 #include "parameters3.h"
 //#include "phi-interpolator.h"
-
+#include "mkpath.h"
+#include <cmath>
 #ifdef USECL
 #include <CL/opencl.h>
 #include <SDKCommon.hpp>
@@ -16,7 +18,7 @@
 #pragma warning(disable:4996)
 
 using namespace std;
-
+using std::string;
 const int Nn = (Nx + 1) * (Ny + 1) * (Nz + 1);
 
 #define NRMN 100
@@ -26,6 +28,7 @@ const int Nn = (Nx + 1) * (Ny + 1) * (Nz + 1);
 
 complex<Float> eye, dt;
 Float t, dx, dy, dz, idx2, idy2, idz2;
+string path = prefix;
 
 complex<Float> *psi = new complex<Float>[Nn];
 complex<Float> *psi_n = new complex<Float>[Nn];
