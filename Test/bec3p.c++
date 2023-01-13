@@ -639,6 +639,7 @@ fflush(stdout);
 				for (j = 0; j <= Ny; j++)
 					for (k = 0; k <= Nz; k++)
 				psi(i, j, k) *= renorm;
+			get_density();
 			// norm = get_normsimp();
 			// printf("Checking at N=%6d, t=%11.4lg, P=%11.4lg\n", itime, t, norm);
 			// fflush(stdout);
