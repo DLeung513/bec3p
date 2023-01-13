@@ -245,6 +245,8 @@ fflush(stdout);
 	get_phi();
 #else
 	get_Vtr();
+	printf("Save initial trap...\n");
+	fflush(stdout);
 	// Save trap information
 	filephi = fopen("./data/phi_ini.dat", "w");
 	for (i = 0; i <= Nx; i++)
