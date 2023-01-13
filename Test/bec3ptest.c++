@@ -192,7 +192,7 @@ fflush(stdout);
 
 	// Initial state
 
-	file34 = fopen("psi_ini.dat", "w");
+	file34 = fopen("./data/psi_ini.dat", "w");
 	t = 0.0;
 	itime = 0;
 	ktime = 0;
@@ -280,7 +280,7 @@ printf("Initiate the iteration...\n");
 fflush(stdout);
 
 	// get initial U 
-	file41 = fopen("erg41.dat", "w");
+	file41 = fopen("./data/erg41.dat", "w");
 	get_U(mu);
 
 	norm =  get_normsimp();
@@ -290,10 +290,10 @@ fflush(stdout);
 
 	movie(itime);	// Output data for contour plots
 
-	file21 = fopen("psi21.dat", "w");
-	file22 = fopen("psi22.dat", "w");
-	file23 = fopen("psi23.dat", "w");
-	file24 = fopen("psi24.dat", "w");
+	file21 = fopen("./data/psi21.dat", "w");
+	file22 = fopen("./data/psi22.dat", "w");
+	file23 = fopen("./data/psi23.dat", "w");
+	file24 = fopen("./data/psi24.dat", "w");
 
 	// Time loop
 printf("Test file running...\n");
@@ -371,7 +371,7 @@ fflush(stdout);
 
 		if (itime > 10 && itime % nstep1 == 0)
 		{
-			file33 = fopen("psidense.dat", "w");
+			file33 = fopen("./data/psidense.dat", "w");
 
 			for (i = 0; i <= Nx; i++)
 			{
