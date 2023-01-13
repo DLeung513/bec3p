@@ -281,7 +281,8 @@ fflush(stdout);
 	file24 = fopen("psi24.dat", "w");
 
 	// Time loop
-
+printf("Test file running...\n");
+fflush(stdout);
 printf("Starting the time loop...\n");
 fflush(stdout);
 
