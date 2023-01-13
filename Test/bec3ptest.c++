@@ -369,7 +369,7 @@ fflush(stdout);
 		printf("N=%6d, t=%11.4lg, E=%11.4lg, P=%11.4lg\n", itime, t, E0, norm);
 		fflush(stdout);
 
-		if (itime > 10 && itime % nstep1 == 0)
+		if (itime > 1 && itime % nstep1 == 0)
 		{
 			file33 = fopen("./data/psidense.dat", "w");
 
