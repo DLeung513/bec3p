@@ -98,7 +98,7 @@ const Float xr = 5.0f, yr = 5.0f, zr = 5.0f;
 
 #ifndef KERNEL
 // Simulation parameters
-const Float tau = 0.01;//10;					// Time step (units of [T])
+const Float tau = 0.001;//10;					// Time step (units of [T])
 const int time_n = 10;//0000;				// Number of iterations to run
 const Float G = 0.0;//0.0667;				// Newton's constant (may be scaled)
 const Float N = 1.0;//2.0;					// Particle number (may be scaled)
@@ -121,5 +121,5 @@ const Float tolREL = 1e-6;				// Imaginary time system relaxation
 // Output control
 const int nstep0 = 1;	// number of steps of initial transient without output
 const int nstep1 = 1;	// every how many steps energy is output
-const int nstep2 = 20;	// every how many steps contour plot is output
+const int nstep2 = 10;	// every how many steps contour plot is output
 #endif
