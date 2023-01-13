@@ -70,187 +70,6 @@ void thomas(complex<Float> *, complex<Float> *, complex<Float> *,
 			complex<Float> *, int m);
 void get_density();
 
-#ifdef USECL
-
-cl_mem clpsi, clpsi_n, clU, cldensity, clphi, clres;
-cl_kernel kernelNorm_psi, kernelGet_U, kernelGet_res;
-cl_kernel kernelCalc_rhs_x, kernelCalc_rhs_y, kernelCalc_rhs_z;
-cl_kernel kernelSolve_x, kernelSolve_y, kernelSolve_z;
-cl_command_queue command_queue;
-#define GROUP_SIZE 256
-size_t globalThreads = (((Nn + GROUP_SIZE - 1) / GROUP_SIZE) * GROUP_SIZE);
-size_t localThreads = GROUP_SIZE;
-cl_context context = 0;
-cl_program program = 0;
-
-bool initializeCL()
-{
-	// OpenCL structures
-	cl_int status;
-	cl_platform_id platform;
-	cl_uint num_platforms;
-	cl_device_id device_id;
-	cl_uint num_devices;
-	cl_context_properties cps[] = {CL_CONTEXT_PLATFORM, 0, 0};
-	streamsdk::SDKFile includeFile;
-	streamsdk::SDKFile kernelFile;	// create CL program using the kernel source
-	std::string includePath = "parameters3.h";
-	std::string kernelPath = "BEC3P.cl";
-	const char * source;
-	size_t sourceSize;
-	const char szCLflags[] = "";
-	//const char szCLflags[] = "-cl-mad-enable -cl-no-signed-zeros "
-	//						   "-cl-unsafe-math-optimizations "
-	//						   "-cl-finite-math-only -cl-fast-relaxed-math";
-	char szCLopts[sizeof(szCLflags) + MAX_PATH + 10];
-	char szCLpath[MAX_PATH];
-
-	if (clGetPlatformIDs(1, &platform, &num_platforms) != CL_SUCCESS ||
-		num_platforms != 1 ||
-		clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 1, &device_id,
-					   &num_devices) != CL_SUCCESS || num_devices != 1)
-	{
-		printf("Failed to initialize OpenCL.\n");
-		return false;
-	}
-
-	cps[1] = (cl_context_properties)platform;
-    context = clCreateContextFromType(cps, CL_DEVICE_TYPE_ALL, NULL, NULL,
-									  &status);
-	if (status != CL_SUCCESS)
-		{ printf("Failed to create CL context.\n"); context = 0; return false; }
-	command_queue = clCreateCommandQueue(context, device_id, 0, &status);
-	if (status != CL_SUCCESS)
-		{ printf("Failed to create CL command queue.\n"); return false; }
-
-	GetShortPathNameA(_getcwd(NULL, 0), szCLpath, sizeof(szCLpath));
-	for (char *p = szCLpath; *p != 0; p++) if (*p == '\\') *p = '/';
-	strcpy(szCLopts, "-I ");
-	strcat(szCLopts, szCLpath);
-	strcat(szCLopts, " ");
-	strcat(szCLopts, szCLflags);
-
-	source = "#include \"BEC3P.cl\"\n";
-	sourceSize = strlen(source);
-	program = clCreateProgramWithSource(context, 1, &source, &sourceSize,
-										&status);
-
-	if (status != CL_SUCCESS)
-		{ printf("Failed to create CL program.\n"); program = 0; return false; }
-
-	if ((status = clBuildProgram(program, 0, NULL, szCLopts, NULL, NULL))
-		!= CL_SUCCESS)
-	{
-		printf("Failed to build CL program: %d.\n", status);
-		char buffer[4096];
-		size_t length;
-		clGetProgramBuildInfo(program, device_id, CL_PROGRAM_BUILD_LOG,
-							  sizeof(buffer), buffer, &length);
-		printf("%s\n", buffer);
-		return false;
-	}
-
-	kernelGet_res = clCreateKernel(program, "get_res", &status);
-	if (status != CL_SUCCESS)
-		{ printf("Failed to create CL kernel get_res.\n"); return false; }
-
-	kernelCalc_rhs_x = clCreateKernel(program, "calc_rhs_x", &status);
-    if(status != CL_SUCCESS)
-		{ printf("Failed to create CL kernel Calc_rhs_x.\n"); return false; }
-
-	kernelCalc_rhs_y = clCreateKernel(program, "calc_rhs_y", &status);
-    if(status != CL_SUCCESS)
-		{ printf("Failed to create CL kernel Calc_rhs_y.\n"); return false; }
-
-	kernelCalc_rhs_z = clCreateKernel(program, "calc_rhs_z", &status);
-    if(status != CL_SUCCESS)
-		{ printf("Failed to create CL kernel Calc_rhs_z.\n"); return false; }
-
-	kernelSolve_x = clCreateKernel(program, "solve_x", &status);
-    if(status != CL_SUCCESS)
-		{ printf("Failed to create CL kernel solve_x.\n"); return false; }
-
-	kernelSolve_y = clCreateKernel(program, "solve_y", &status);
-    if(status != CL_SUCCESS)
-		{ printf("Failed to create CL kernel solve_y.\n"); return false; }
-
-	kernelSolve_z = clCreateKernel(program, "solve_z", &status);
-    if(status != CL_SUCCESS)
-		{ printf("Failed to create CL kernel solve_z.\n"); return false; }
-
-	clpsi = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR,
-						   sizeof(psi), psi, &status);
-	if (status != CL_SUCCESS)
-		{ printf("Failed to allocate clpsi\n"); return false; }
-
-	clpsi_n = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR,
-							 sizeof(psi_n), psi_n, &status);
-	if (status != CL_SUCCESS)
-		{ printf("Failed to allocate clpsi_n\n"); return false; }
-
-	cldensity = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR,
-							   sizeof(dens), dens, &status);
-	if (status != CL_SUCCESS)
-		{ printf("Failed to allocate cldensity\n"); return false; }
-
-	clphi = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR,
-						   sizeof(phi), phi, &status);
-	if (status != CL_SUCCESS)
-		{ printf("Failed to allocate clphi\n"); return false; }
-
-	clU = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR,
-						 sizeof(UU), UU, &status);
-	if (status != CL_SUCCESS)
-		{ printf("Failed to allocate clU\n"); return false; }
-
-	clres = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR,
-						   sizeof(res), res, &status);
-	if (status != CL_SUCCESS)
-		{ printf("Failed to allocate clres\n"); return false; }
-
-	size_t sz;
-	char inf[10000];
-	memset(inf, 0, sizeof(inf));
-
-	clGetPlatformInfo(platform, CL_PLATFORM_PROFILE, sizeof(inf) - 1, inf,
-					  NULL);
-	printf("\n\n\nPROFILE: %s\n", inf);
-	clGetPlatformInfo(platform, CL_PLATFORM_NAME, sizeof(inf) - 1, inf, NULL);
-	printf("NAME: %s\n", inf);
-	clGetPlatformInfo(platform, CL_PLATFORM_VENDOR, sizeof(inf) - 1, inf, NULL);
-	printf("VENDOR: %s\n", inf);
-
-	clGetPlatformInfo(platform, CL_PLATFORM_EXTENSIONS, sizeof(inf) - 1, inf,
-					  NULL);
-	printf("PLATFORM EXTENSIONS: %s\n", inf);
-
-	clGetDeviceInfo(device_id, CL_DEVICE_PROFILE, sizeof(inf), inf, NULL);
-	printf("DEVICE PROFILE: %s\n", inf);
-
-	clGetDeviceInfo(device_id, CL_DEVICE_NAME, sizeof(inf), inf, NULL);
-	printf("DEVICE NAME: %s\n", inf);
-
-	clGetDeviceInfo(device_id, CL_DEVICE_VENDOR, sizeof(inf), inf, NULL);
-	printf("DEVICE VENDOR: %s\n", inf);
-
-	clGetDeviceInfo(device_id, CL_DEVICE_EXTENSIONS, sizeof(inf), inf, NULL);
-	printf("DEVICE EXTENSIONS: %s\n", inf);
-
-	clGetDeviceInfo(device_id, CL_DEVICE_MAX_WORK_GROUP_SIZE, sizeof(sz), &sz,
-					NULL);
-	printf("WORKGROUP SIZE: %d\n", sz);
-
-	printf("====================================================\n\n\n");
-
-	return true;
-}
-
-void finalizeCL()
-{
-	if (program) clReleaseProgram(program);
-	if (context) clReleaseContext(context);
-}
-#endif
 
 //**********************************************************************
 void loopdetect(Float *nrma, Float norm, const char *pdir, int &nrmc)
@@ -302,18 +121,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	complex<Float> foo4;
 	complex<Float> foo5X, foo5Y, foo5Z;
 
-printf("Reading visible matter grav. potential...\n");
-fflush(stdout);
-
-	read_Ub();
-
-printf("Read.\n");
-fflush(stdout);
-
-#ifdef USECL
-	initializeCL();
-#endif
-
 	// Fixed parameters
 
 	eye = complex<Float>(0, 1);
@@ -343,11 +150,8 @@ fflush(stdout);
 	dt = complex<Float>(0, -tau);
 	omega = 0;
 	gamma = 0;
-#ifdef GRAV
-	mu = 0;
-#else
-	mu = 0.5 / SQ(R);
-#endif
+
+	mu=0;
 
 	xi = (eye + gamma) / (gamma * gamma + 1);
 
@@ -534,14 +338,14 @@ fflush(stdout);
 
 		if (itime > 10 && itime % nstep1 == 0)
 		{
-			file33 = fopen("psi33.dat", "w");
+			file33 = fopen("psidense.dat", "w");
 
 			for (i = 0; i <= Nx; i++)
 			{
 				for (j = 0; j <= Ny; j++)
 					for (k = 0; k <= Nz; k++)
 						fprintf(file33, "%lg %lg %lg\n", xl + i * dx,
-												yl + j * dy, density(i, j, k));
+												yl + j * dy, zl + k * dz, density(i, j, k));
 				fprintf(file33, "\n");  // For Gnuplot
 			}
 			fclose(file33);
@@ -576,9 +380,9 @@ fflush(stdout);
 				dt = tau;
 				omega = omega0;
 				gamma = gamma0;
-#ifndef GRAV
+
 				mu = 0;
-#endif
+
 				xi = (eye + gamma) / (gamma * gamma + 1);
 
 				// Recompute helper variables
@@ -628,9 +432,6 @@ fflush(stdout);
 	fclose(file24);
 	fclose(file41);
 
-#ifdef USECL
-	finalizeCL();
-#endif
 
 	return true;
 }
@@ -1346,7 +1147,7 @@ void get_phi()	// Grav. potential via Poisson's Eq.
 		double x = xl + i * dx;
 		double y = yl + j * dy;
 		double z = zl + k * dz;
-		phiU(i, j, k) = phi(i, j, k) + Ub(x, y, z);
+		phiU(i, j, k) = phi(i, j, k);
 	}
 
 }
