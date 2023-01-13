@@ -144,6 +144,7 @@ fflush(stdout);
 
 	// Zero arrays
 	memset(phi, 0, sizeof(phi));
+	memset(phiTr, 0, sizeof(phiTr));
 	memset(psi, 0, sizeof(psi));
 	memset(psi_n, 0, sizeof(psi));
 	memset(UU, 0, sizeof(UU));
