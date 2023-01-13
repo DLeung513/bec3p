@@ -32,6 +32,7 @@ complex<Float> *psi_n = new complex<Float>[Nn];
 Float *dens = new Float[Nn];
 Float *phi = new Float[Nn];
 Float *phiU = new Float[Nn];
+Float *phiTr = new Float[Nn];
 Float *UU = new Float[Nn];
 Float *res = new Float[Nn];
 
@@ -42,6 +43,7 @@ Float *res = new Float[Nn];
 #define density(i,j,k) (dens[ijk(i,j,k)])
 #define phi(i,j,k) (phi[ijk(i,j,k)])
 #define phiU(i,j,k) (phiU[ijk(i,j,k)])
+#define phiTr(i,j,k) (phiTr[ijk(i,j,k)])
 #define U(i,j,k) (UU[ijk(i,j,k)])
 #define res(i,j,k) (res[ijk(i,j,k)])
 
@@ -65,6 +67,7 @@ void solve_y(complex<Float>, complex<Float>,
 void calc_rhs_z(complex<Float>, complex<Float>, complex<Float>);
 void solve_z(complex<Float>, complex<Float>, complex<Float>);
 Float energy(Float, FILE*);
+void energyTr(Float mu);
 void movie(int);
 void thomas(complex<Float> *, complex<Float> *, complex<Float> *,
 			complex<Float> *, int m);
@@ -112,7 +115,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	Float norm, norm0;
 	Float E0, E1 = 0, E2 = 0;
 	int i, j, k, itime, ktime;
-	FILE *file21, *file22, *file23, *file24, *file33, *file34, *file41;
+	FILE *file21, *file22, *file23, *file24, *file33, *file34, *file41, *filephi;
 	Float nrma[NRMN];
 	int nrmc;
 	complex<Float> foo1X, foo1XS, foo1Y, foo1YS, foo1ZS;
@@ -179,7 +182,7 @@ fflush(stdout);
 
 	// Initial state
 
-	file34 = fopen("psi34.dat", "w");
+	file34 = fopen("psi_ini.dat", "w");
 	t = 0.0;
 	itime = 0;
 	ktime = 0;
@@ -201,7 +204,7 @@ fflush(stdout);
 			psi(i, j, k) = fermi(mu, i, j, k);
 #endif
 			fprintf(file34, "%lg %lg %lg %lg\n", xl + i * dx, yl + j * dy,
-											zl + k * dz, real(psi(i, j, k)));
+											zl + k * dz, psi(i, j, k));
 		}
 		fprintf(file34, "\n");	// For Gnuplot
 	}
@@ -242,6 +245,20 @@ fflush(stdout);
 	get_phi();
 #else
 	get_Vtr();
+	// Save trap information
+	filephi = fopen("./data/phi_ini.dat", "w");
+	for (i = 0; i <= Nx; i++)
+	{
+		for (j = 0; j <= Ny; j++)
+			for (k = 0; k <= Nz; k++)
+		{
+				fprintf(filephi, "%lg %lg %lg %lg\n", xl + i * dx, yl + j * dy,
+											zl + k * dz, phiTr(i, j, k));
+		}
+		fprintf(filephi, "\n");	// For Gnuplot
+	}
+	fclose(filephi);
+	energyTr(mu);
 #endif
 
 printf("Initiate the iteration...\n");
@@ -479,7 +496,7 @@ Float energy(Float mu, FILE *file41)
 #ifdef GRAV
 			0.5 *		// See Wang, PRD64, 124009
 #endif
-			phiU(i, j, k) - mu) * mdpsisq;
+			phiU(i, j, k) + phiTr(i, j, k) - mu) * mdpsisq;
 		EK += SQ(real(psi(i + 1, j, k) - psi(i - 1, j, k))) * idx2;
 		EK += SQ(imag(psi(i + 1, j, k) - psi(i - 1, j, k))) * idx2;
 		EK += SQ(real(psi(i, j + 1, k) - psi(i, j - 1, k))) * idy2;
@@ -491,11 +508,40 @@ Float energy(Float mu, FILE *file41)
 	EU *= dV;
 	EG *= dV;
 	EK *= (Float)0.125 * dV;
-	printf("Energy at t=%lg, EK=%lg,EU=%lg,EG=%lg,EI=%lg\n", t, EK, EU, EG, EI);
-	fflush(stdout);
+	// printf("Energy at t=%lg, EK=%lg,EU=%lg,EG=%lg,EI=%lg\n", t, EK, EU, EG, EI);
+	// fflush(stdout);
 	fprintf(file41, "%lg\t%lg\t%lg\t%lg\t%lg\n", t, EK, EU, EG, EI);
 	fflush(file41);
 	return EK + EU + EI;
+}
+
+void energyTr(Float mu)
+{
+	Float EK, EU, EI, EG, mdpsisq;
+	int i, j, k;
+	const static Float dV = dx * dy * dz;
+	EK = EU = EI = EG = 0;
+	for (k = 1; k < Nz; k++)
+		for (j = 1; j < Ny; j++)
+			for (i = 1; i < Nx; i++)
+			{
+				mdpsisq = SQ(real(psi(i, j, k))) + SQ(imag(psi(i, j, k)));
+				EI += SQ(mdpsisq);
+				EG += 0.5 * (phi(i, j, k)) * mdpsisq;
+				EU += (phiU(i,j,k)+phiTr(i, j, k) -mu)*mdpsisq;
+				EK += SQ(real(psi(i + 1, j, k) - psi(i - 1, j, k))) * idx2;
+				EK += SQ(imag(psi(i + 1, j, k) - psi(i - 1, j, k))) * idx2;
+				EK += SQ(real(psi(i, j + 1, k) - psi(i, j - 1, k))) * idy2;
+				EK += SQ(imag(psi(i, j + 1, k) - psi(i, j - 1, k))) * idy2;
+				EK += SQ(real(psi(i, j, k + 1) - psi(i, j, k - 1))) * idz2;
+				EK += SQ(imag(psi(i, j, k + 1) - psi(i, j, k - 1))) * idz2;
+			}
+	EI *= (Float)0.5 * c * dV;
+	EU *= dV;
+	EG *= dV;
+	EK *= (Float)0.125 * dV;
+	printf("Energy at t=%lg, EK=%lg,EU=%lg,EG=%lg,EI=%lg\n", t, EK, EU, EG, EI);
+	fflush(stdout);
 }
 
 //**********************************************************************
@@ -506,7 +552,7 @@ void get_U(Float mu)	// Find U
 	for (k = 0; k <= Nz; k++)
 		for (j = 0; j <= Ny; j++)
 			for (i = 0; i <= Nx; i++)
-		U(i, j, k) = c * density(i, j, k) + phiU(i, j, k) - mu;
+				U(i, j, k) = c * density(i, j, k) + phiU(i, j, k) + phiTr(i, j, k) - mu;
 }
 
 //*********************************************************************
@@ -532,7 +578,7 @@ void get_Vtr()
 		for (j = 0; j <= Ny; j++)
 			for (i = 0; i <= Nx; i++)
 	{
-		phi(i, j, k) = (Float)0.5 * ((1 + ex) * SQ(xl + i * dx) +
+		phiTr(i, j, k) = (Float)0.5 * ((1 + ex) * SQ(xl + i * dx) +
 								(1 + ey) * SQ(yl + j * dy) +
 								(1 + ez) * SQ(zl + k * dz)) / SQ(SQ(aho));
 	}
