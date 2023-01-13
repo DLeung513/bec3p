@@ -491,6 +491,8 @@ Float energy(Float mu, FILE *file41)
 	EU *= dV;
 	EG *= dV;
 	EK *= (Float)0.125 * dV;
+	printf("Energy at t=%lg, EK=%lg,EU=%lg,EG=%lg,EI=%lg\n", t, EK, EU, EG, EI);
+	fflush(stdout);
 	fprintf(file41, "%lg\t%lg\t%lg\t%lg\t%lg\n", t, EK, EU, EG, EI);
 	fflush(file41);
 	return EK + EU + EI;
@@ -1058,32 +1060,6 @@ void movie(int itime)
 	movieY(itime);
 }
 
-//**********************************************************************
-#ifdef USECL
-inline void get_phi_kernel(bool bDir, Float G4pi, Float idx2, Float idy2,
-						   Float idz2, Float h2)
-{
-	int a = 0;
-
-	clSetKernelArg(kernelGet_res, a++, sizeof(cl_mem), &cldensity);
-	clSetKernelArg(kernelGet_res, a++, sizeof(cl_mem), bDir ? &clphi : &clres);
-	clSetKernelArg(kernelGet_res, a++, sizeof(cl_mem), bDir ? &clres : &clphi);
-	clSetKernelArg(kernelGet_res, a++, sizeof(Float), &G4pi);
-	clSetKernelArg(kernelGet_res, a++, sizeof(Float), &idx2);
-	clSetKernelArg(kernelGet_res, a++, sizeof(Float), &idy2);
-	clSetKernelArg(kernelGet_res, a++, sizeof(Float), &idz2);
-	clSetKernelArg(kernelGet_res, a++, sizeof(Float), &h2);
-
-	clEnqueueWriteBuffer(command_queue, cldensity, CL_TRUE, 0, sizeof(dens), dens,
-						 0, NULL, NULL);
-	clEnqueueWriteBuffer(command_queue, bDir ? clphi : clres, CL_TRUE, 0,
-			bDir ? sizeof(phi) : sizeof(res), bDir ? phi : res, 0, NULL, NULL);
-	clEnqueueNDRangeKernel(command_queue, kernelGet_res, 1, NULL, &globalThreads,
-						   &localThreads, 0, NULL, NULL);
-	clEnqueueReadBuffer(command_queue, bDir ? clres : clphi, CL_TRUE, 0,
-			bDir ? sizeof(res) : sizeof(phi), bDir ? res : phi, 0, NULL, NULL);
-}
-#endif
 
 void get_phi()	// Grav. potential via Poisson's Eq.
 {
