@@ -624,7 +624,7 @@ Float fermi(Float mu, int i, int j, int k)
 	z = zl + k * dz;
 	r2 = (1 + ex) * SQ(x) + (1 + ey) * SQ(y) + (1 + ez) * SQ(z);
 	// const Float norm = sqrt(N)/pow(pi, 3.0/4.0)/pow(aho, 3.0/2.0);
-	const Float norm = sqrt(N)/pow(pi)/pow(aho, 3.0/2.0);
+	const Float norm = sqrt(N)/pow(pi,2)/pow(aho, 3.0/2.0);
 	// R2 = SQ(R);
 	//if (r2 < R2) return (Float)(1 - r2) * norm;//(Float)sqrt((0.5 * (R2 - r2)) * norm);
 	//else return 0.0;
