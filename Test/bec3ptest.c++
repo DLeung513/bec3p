@@ -30,6 +30,7 @@ complex<Float> eye, dt;
 Float t, dx, dy, dz, idx2, idy2, idz2;
 string path = prefix;
 
+// Here flatten all the 3D data into 1D by ijk(i,j,k) function
 complex<Float> *psi = new complex<Float>[Nn];
 complex<Float> *psi_n = new complex<Float>[Nn];
 Float *dens = new Float[Nn];
@@ -38,7 +39,7 @@ Float *phiU = new Float[Nn];
 Float *phiTr = new Float[Nn];
 Float *UU = new Float[Nn];
 Float *res = new Float[Nn];
-
+// Here map all the 1D data back to 3D by spicifying the counting method
 #define ijk(i,j,k) ((((i) * (Ny + 1)) + (j)) * (Nz + 1) + (k))
 
 #define psi(i,j,k) (psi[ijk(i,j,k)])
@@ -126,7 +127,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	complex<Float> foo3X, foo3XS, foo3Y, foo3YS, foo3Z, foo3ZS;
 	complex<Float> foo4;
 	complex<Float> foo5X, foo5Y, foo5Z;
-
+	double norm_ini;
+	int mkdirretval;
+    //mkdirretval=light::mkpath("foo2/bar",0755);
+    //mkdirretval=light::mkpath("./lsl/foo2/bar");
+    mkdirretval=light::mkpath(path.c_str());
+    std::cout << mkdirretval << '\n';
 	// Fixed parameters
 
 	eye = complex<Float>(0, 1);
