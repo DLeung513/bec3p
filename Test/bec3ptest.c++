@@ -262,6 +262,8 @@ fflush(stdout);
 		fprintf(filephi, "\n");	// For Gnuplot
 	}
 	fclose(filephi);
+	printf("Print initial energy...\n");
+	fflush(stdout);
 	energyTr(mu);
 #endif
 
