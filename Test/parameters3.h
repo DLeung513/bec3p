@@ -25,9 +25,9 @@ const Float pi = 4 * atan((Float)1);
 //#define GRAV
 
 // Grid size
-#define Nx 100//120
-#define Ny 100//120
-#define Nz 100//120
+#define Nx 80//120
+#define Ny 80//120
+#define Nz 80//120
 
 std::string prefix = "./data/";
 // A comment on units: The Gross-Pitaevskii equation is solved in a
@@ -98,7 +98,7 @@ const Float xr = 8.0f, yr = 8.0f, zr = 8.0f;
 
 #ifndef KERNEL
 // Simulation parameters
-const Float tau = 0.01;//10;					// Time step (units of [T])
+const Float tau = 0.001;//10;					// Time step (units of [T])
 const int time_n = 10;//0000;				// Number of iterations to run
 const Float G = 0.0;//0.0667;				// Newton's constant (may be scaled)
 const Float N = 1000.0;//2.0;					// Particle number (may be scaled)
@@ -116,7 +116,7 @@ const Float aho = 1.0;                // harmonic length (in [L])
 // Iteration tolerances
 const Float tolGPE = 1e-4;				// GPE nonlinear term iteration
 const Float tolPSN = 1e-4;				// Poisson relaxation method iteration
-const Float tolREL = 1e-8;				// Imaginary time system relaxation
+const Float tolREL = 1e-7;				// Imaginary time system relaxation
 
 // Output control
 const int nstep0 = 1;	// number of steps of initial transient without output

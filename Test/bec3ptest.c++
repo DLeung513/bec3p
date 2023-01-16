@@ -603,16 +603,17 @@ void get_Vtr()
 // *********************************************************************
 Float fermi(Float mu, int i, int j, int k)	// Fermi-Thomas initial state
 {
-	Float x, y, z, r2, R2;
-	const Float norm = 1;//15 * N * sqrt(2 * mu) * SQ(mu) / pi;
+	Float x, y, z, r2, n, omg;
+	omg = 1/SQ(aho);
+	const Float mufermi = omg/2.0*pow((15.0*N*a/aho),(2.0/5.0));
 
 	x = xl + i * dx;
 	y = yl + j * dy;
 	z = zl + k * dz;
 	r2 = (1 + ex) * SQ(x) + (1 + ey) * SQ(y) + (1 + ez) * SQ(z);
-	R2 = SQ(R);
-	if (r2 < R2) return (Float)sqrt((0.5 * (R2 - r2)) * norm);
-	else return 0.0;
+	n = (mufermi-0.5*SQ(omg)*r2)/c;
+	if (n < 0) return 0.0;
+	else return n;
 }
 
 // Float fermi(Float mu, int i, int j, int k)	
