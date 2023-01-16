@@ -604,7 +604,7 @@ void get_Vtr()
 Float fermi(Float mu, int i, int j, int k)	// Fermi-Thomas initial state
 {
 	Float x, y, z, r2, R2;
-	const Float norm = N;//15 * N * sqrt(2 * mu) * SQ(mu) / pi;
+	const Float norm = 1;//15 * N * sqrt(2 * mu) * SQ(mu) / pi;
 
 	x = xl + i * dx;
 	y = yl + j * dy;
