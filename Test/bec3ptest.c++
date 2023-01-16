@@ -1000,9 +1000,9 @@ void movieZ(int itime)	// Outputs files
 	int i, j, k;
 	FILE *file8, *file10, *file11;
 
-	sprintf(ch, "densZ%07d.dat", itime);
-	sprintf(cs, "phasZ%07d.dat", itime);
-	sprintf(cu, "gravZ%07d.dat", itime);
+	sprintf(ch, "./data/densZ%07d.dat", itime);
+	sprintf(cs, "./data/phasZ%07d.dat", itime);
+	sprintf(cu, "./data/gravZ%07d.dat", itime);
 	file8 = fopen(ch, "w");
 	file10 = fopen(cs, "w");
 	file11 = fopen(cu, "w");
@@ -1041,9 +1041,9 @@ void movieX(int itime)	// Outputs files
 	int i, j, k;
 	FILE *file8, *file10, *file11;
 
-	sprintf(ch, "densX%07d.dat", itime);
-	sprintf(cs, "phasX%07d.dat", itime);
-	sprintf(cu, "gravX%07d.dat", itime);
+	sprintf(ch, "./data/densX%07d.dat", itime);
+	sprintf(cs, "./data/phasX%07d.dat", itime);
+	sprintf(cu, "./data/gravX%07d.dat", itime);
 	file8 = fopen(ch, "w");
 	file10 = fopen(cs, "w");
 	file11 = fopen(cu, "w");
@@ -1082,9 +1082,9 @@ void movieY(int itime)	// Outputs files
 	int i, j, k;
 	FILE *file8, *file10, *file11;
 
-	sprintf(ch, "densY%07d.dat", itime);
-	sprintf(cs, "phasY%07d.dat", itime);
-	sprintf(cu, "gravY%07d.dat", itime);
+	sprintf(ch, "./data/densY%07d.dat", itime);
+	sprintf(cs, "./data/phasY%07d.dat", itime);
+	sprintf(cu, "./data/gravY%07d.dat", itime);
 	file8 = fopen(ch, "w");
 	file10 = fopen(cs, "w");
 	file11 = fopen(cu, "w");
