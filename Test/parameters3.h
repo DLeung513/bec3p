@@ -98,17 +98,17 @@ const Float xr = 5.0f, yr = 5.0f, zr = 5.0f;
 
 #ifndef KERNEL
 // Simulation parameters
-const Float tau = 0.001;//10;					// Time step (units of [T])
+const Float tau = 0.01;//10;					// Time step (units of [T])
 const int time_n = 10;//0000;				// Number of iterations to run
 const Float G = 0.0;//0.0667;				// Newton's constant (may be scaled)
-const Float N = 1000.0;//2.0;					// Particle number (may be scaled)
+const Float N = 5000.0;//2.0;					// Particle number (may be scaled)
 const Float R = 1.0;//50.0;					// Size of initial condensate (in [L])
-const Float a = 0.01;//0.5 * G * SQ(R/pi);		// Scattering length (TF default)
+const Float a = 0.00004;//0.5 * G * SQ(R/pi);		// Scattering length (TF default)
 const Float c = 4 * pi * a;				// BEC interaction coupling strength
 const Float ex = 0.0;					// Softening parameters
 const Float ey = 0.0;
 const Float ez = 0.0;
-const Float omega0 = 0.0;//0.0001;				// Initial angular velocity (in rad/[T])
+const Float omega0 = 0.6;//0.0001;				// Initial angular velocity (in rad/[T])
 const Float gamma0 = 0.0;				// Softening parameter
 const int despin_n = 1;				// When to stop spinning the condensate
 const Float aho = 1.0;                // harmonic length (in [L])
