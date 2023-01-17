@@ -25,9 +25,9 @@ const Float pi = 4 * atan((Float)1);
 //#define GRAV
 
 // Grid size
-#define Nx 80//120
-#define Ny 80//120
-#define Nz 80//120
+#define Nx 60//120
+#define Ny 60//120
+#define Nz 60//120
 
 std::string prefix = "./data/";
 // A comment on units: The Gross-Pitaevskii equation is solved in a
@@ -101,18 +101,18 @@ const Float xr = 5.0f, yr = 5.0f, zr = 5.0f;
 const Float tau = 0.01;//10;					// Time step (units of [T])
 const int time_n = 10;//0000;				// Number of iterations to run
 const Float G = 0.0;//0.0667;				// Newton's constant (may be scaled)
-const Float N = 5000.0;//2.0;					// Particle number (may be scaled)
+const Float N = 1.0;//2.0;					// Particle number (may be scaled)
 const Float R = 1.0;//50.0;					// Size of initial condensate (in [L])
-const Float a = 0.00004;//0.5 * G * SQ(R/pi);		// Scattering length (TF default)
+const Float a = 0.0;//0.5 * G * SQ(R/pi);		// Scattering length (TF default)
 const Float c = 4 * pi * a;				// BEC interaction coupling strength
 const Float ex = 0.0;					// Softening parameters
 const Float ey = 0.0;
 const Float ez = 0.0;
-const Float omega0 = 0.6;//0.0001;				// Initial angular velocity (in rad/[T])
+const Float omega0 = 0.0;//0.0001;				// Initial angular velocity (in rad/[T])
 const Float gamma0 = 0.0;				// Softening parameter
 const int despin_n = 1;				// When to stop spinning the condensate
-const Float aho = 1.0;                // harmonic length (in [L])
-
+// const Float aho = 1.0;                // harmonic length (in [L])
+const Float omg = 1.0;                  // harmonic trap (in rad/[T])
 // Iteration tolerances
 const Float tolGPE = 1e-6;				// GPE nonlinear term iteration
 const Float tolPSN = 1e-4;				// Poisson relaxation method iteration
