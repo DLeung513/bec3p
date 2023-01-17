@@ -604,38 +604,38 @@ void get_Vtr()
 }
 
 // *********************************************************************
-// Float fermi(Float mu, int i, int j, int k)	// Fermi-Thomas initial state
-// {
-// 	Float x, y, z, r2, n, aho;
-// 	aho = pow(omg, -0.5);
-// 	const Float mufermi = omg/2.0*pow((15.0*N*a/aho),(2.0/5.0));
-
-// 	x = xl + i * dx;
-// 	y = yl + j * dy;
-// 	z = zl + k * dz;
-// 	r2 = (1 + ex) * SQ(x) + (1 + ey) * SQ(y) + (1 + ez) * SQ(z);
-// 	n = (mufermi-0.5*SQ(omg)*r2)/c;
-// 	// n = exp(-0.5*SQ(omg)*r2)
-// 	if (n < 0) return 0.0;
-// 	else return n;
-// }
-
-Float fermi(Float mu, int i, int j, int k)	
+Float fermi(Float mu, int i, int j, int k)	// Fermi-Thomas initial state
 {
-	Float x, y, z, r2, aho;
-	// const Float norm = 15 * N * sqrt(2 * mu) * SQ(mu) / pi;
+	Float x, y, z, r2, n, aho;
+	aho = pow(omg, -0.5);
+	const Float mufermi = omg/2.0*pow((15.0*N*a/aho),(2.0/5.0));
+
 	x = xl + i * dx;
 	y = yl + j * dy;
 	z = zl + k * dz;
 	r2 = (1 + ex) * SQ(x) + (1 + ey) * SQ(y) + (1 + ez) * SQ(z);
-	aho = pow(omg, -0.5);
-	// const Float norm = sqrt(N)/pow(pi, 3.0/4.0)/pow(aho, 3.0/2.0);
-	const Float norm = pow(pi,2)/pow(aho, 3.0/4.0);
-	// R2 = SQ(R);
-	//if (r2 < R2) return (Float)(1 - r2) * norm;//(Float)sqrt((0.5 * (R2 - r2)) * norm);
-	//else return 0.0;
-	return (double) exp(-r2/(2.0*SQ(aho))) * norm;
+	n = (mufermi-0.5*SQ(omg)*r2)/c;
+	// n = exp(-0.5*SQ(omg)*r2)
+	if (n < 0) return 0.0;
+	else return sqrt(n);
 }
+
+// Float fermi(Float mu, int i, int j, int k)	
+// {
+// 	Float x, y, z, r2, aho;
+// 	// const Float norm = 15 * N * sqrt(2 * mu) * SQ(mu) / pi;
+// 	x = xl + i * dx;
+// 	y = yl + j * dy;
+// 	z = zl + k * dz;
+// 	r2 = (1 + ex) * SQ(x) + (1 + ey) * SQ(y) + (1 + ez) * SQ(z);
+// 	aho = pow(omg, -0.5);
+// 	// const Float norm = sqrt(N)/pow(pi, 3.0/4.0)/pow(aho, 3.0/2.0);
+// 	const Float norm = pow(pi,2)/pow(aho, 3.0/4.0);
+// 	// R2 = SQ(R);
+// 	//if (r2 < R2) return (Float)(1 - r2) * norm;//(Float)sqrt((0.5 * (R2 - r2)) * norm);
+// 	//else return 0.0;
+// 	return (double) exp(-r2/(2.0*SQ(aho))) * norm;
+// }
 
 //**********************************************************************
 void calc_rhs_x(complex<Float> foo1,	// Find psi_n= Rx(psi)
