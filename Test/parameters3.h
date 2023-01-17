@@ -25,9 +25,9 @@ const Float pi = 4 * atan((Float)1);
 //#define GRAV
 
 // Grid size
-#define Nx 60//120
-#define Ny 60//120
-#define Nz 60//120
+#define Nx 80//120
+#define Ny 80//120
+#define Nz 80//120
 
 std::string prefix = "./data/";
 // A comment on units: The Gross-Pitaevskii equation is solved in a
@@ -93,17 +93,17 @@ std::string prefix = "./data/";
 // hbar^2 a / m = Gm^2 (R/pi)^2, or R = pi sqrt(hbar^2 a / Gm^3).
 
 // Physical size of simulation volume in units of [L]
-const Float xl = -5.0f, yl = -5.0f, zl = -5.0f;
-const Float xr = 5.0f, yr = 5.0f, zr = 5.0f;
+const Float xl = -8.0f, yl = -8.0f, zl = -8.0f;
+const Float xr = 8.0f, yr = 8.0f, zr = 8.0f;
 
 #ifndef KERNEL
 // Simulation parameters
-const Float tau = 0.01;//10;					// Time step (units of [T])
+const Float tau = 0.005;//10;					// Time step (units of [T])
 const int time_n = 10;//0000;				// Number of iterations to run
 const Float G = 0.0;//0.0667;				// Newton's constant (may be scaled)
-const Float N = 1.0;//2.0;					// Particle number (may be scaled)
+const Float N = 1000.0;//2.0;					// Particle number (may be scaled)
 const Float R = 1.0;//50.0;					// Size of initial condensate (in [L])
-const Float a = 0.0;//0.5 * G * SQ(R/pi);		// Scattering length (TF default)
+const Float a = 0.1;//0.5 * G * SQ(R/pi);		// Scattering length (TF default)
 const Float c = 4 * pi * a;				// BEC interaction coupling strength
 const Float ex = 0.0;					// Softening parameters
 const Float ey = 0.0;
