@@ -305,7 +305,7 @@ fflush(stdout);
 	{
 		bool bLoop;
 		t += real(dt);
-		if ((itime - ktime) == despin_n) omega = 0;
+		//if ((itime - ktime) == despin_n) omega = 0;
 
 		// Find psi'=Rx(psi_old)
 		calc_rhs_x(foo1X, foo3X, foo4, foo5X);
