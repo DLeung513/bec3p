@@ -25,9 +25,9 @@ const Float pi = 4 * atan((Float)1);
 //#define GRAV
 
 // Grid size
-#define Nx 80//120
-#define Ny 80//120
-#define Nz 80//120
+#define Nx 100//120
+#define Ny 100//120
+#define Nz 40//120
 
 std::string prefix = "./data/";
 // A comment on units: The Gross-Pitaevskii equation is solved in a
@@ -93,8 +93,8 @@ std::string prefix = "./data/";
 // hbar^2 a / m = Gm^2 (R/pi)^2, or R = pi sqrt(hbar^2 a / Gm^3).
 
 // Physical size of simulation volume in units of [L]
-const Float xl = -4.0f, yl = -4.0f, zl = -4.0f;
-const Float xr = 4.0f, yr = 4.0f, zr = 4.0f;
+const Float xl = -4.0f, yl = -4.0f, zl = -2.0f;
+const Float xr = 4.0f, yr = 4.0f, zr = 2.0f;
 
 #ifndef KERNEL
 // Simulation parameters
@@ -107,7 +107,7 @@ const Float a = 0.001;//0.5 * G * SQ(R/pi);		// Scattering length (TF default)
 const Float c = 4 * pi * a;				// BEC interaction coupling strength
 const Float ex = 0.0;					// Softening parameters
 const Float ey = 0.0;
-const Float ez = 3;                 // In this way, the trap frequency along z is 2 of that of x and y direction
+const Float ez = 8;                 // In this way, the trap frequency along z is 3 of that of x and y direction
 const Float omega0 = 2.0;//0.0001;				// Initial angular velocity (in rad/[T])
 const Float gamma0 = 0.0;				// Softening parameter
 //const int despin_n = 1;				// When to stop spinning the condensate

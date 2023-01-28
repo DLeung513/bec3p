@@ -594,9 +594,6 @@ void get_Vtr()
 		for (j = 0; j <= Ny; j++)
 			for (i = 0; i <= Nx; i++)
 	{
-		// phiTr(i, j, k) = (Float)0.5 * ((1 + ex) * SQ(xl + i * dx) +
-		// 						(1 + ey) * SQ(yl + j * dy) +
-		// 						(1 + ez) * SQ(zl + k * dz)) / SQ(SQ(aho));
 		phiTr(i, j, k) = (Float)0.5 *SQ(omg)*((1 + ex) * SQ(xl + i * dx) +
 								(1 + ey) * SQ(yl + j * dy) +
 								(1 + ez) * SQ(zl + k * dz));
