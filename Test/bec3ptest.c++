@@ -161,7 +161,7 @@ fflush(stdout);
 	memset(dens, 0, sizeof(dens));
 
 	dt = complex<Float>(0, -tau);
-	omega = 0;
+	omega = omega0;
 	gamma = 0;
 
 	mu=0;
