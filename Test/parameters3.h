@@ -25,8 +25,8 @@ const Float pi = 4 * atan((Float)1);
 //#define GRAV
 
 // Grid size
-#define Nx 100//120
-#define Ny 100//120
+#define Nx 200//120
+#define Ny 200//120
 #define Nz 40//120
 
 std::string prefix = "./data/";
@@ -93,22 +93,22 @@ std::string prefix = "./data/";
 // hbar^2 a / m = Gm^2 (R/pi)^2, or R = pi sqrt(hbar^2 a / Gm^3).
 
 // Physical size of simulation volume in units of [L]
-const Float xl = -4.0f, yl = -4.0f, zl = -2.0f;
-const Float xr = 4.0f, yr = 4.0f, zr = 2.0f;
+const Float xl = -8.0f, yl = -8.0f, zl = -2.0f;
+const Float xr = 8.0f, yr = 8.0f, zr = 2.0f;
 
 #ifndef KERNEL
 // Simulation parameters
 const Float tau = 0.005;//10;					// Time step (units of [T])
-const int time_n = 1000;//0000;				// Number of iterations to run
+const int time_n = 100;//0000;				// Number of iterations to run
 const Float G = 0.0;//0.0667;				// Newton's constant (may be scaled)
-const Float N = 1000.0;//2.0;					// Particle number (may be scaled)
+const Float N = 100000.0;//2.0;					// Particle number (may be scaled)
 const Float R = 1.0;//50.0;					// Size of initial condensate (in [L])
 const Float a = 0.001;//0.5 * G * SQ(R/pi);		// Scattering length (TF default)
 const Float c = 4 * pi * a;				// BEC interaction coupling strength
 const Float ex = 0.0;					// Softening parameters
 const Float ey = 0.0;
-const Float ez = 8.0;                 // In this way, the trap frequency along z is 3 of that of x and y direction
-const Float omega0 = 1.0;//0.0001;				// Initial angular velocity (in rad/[T])
+const Float ez = 15.0;                 // In this way, the trap frequency along z is 3 of that of x and y direction
+const Float omega0 = 0.4;//0.0001;				// Initial angular velocity (in rad/[T])
 const Float gamma0 = 0.0;				// Softening parameter
 //const int despin_n = 1;				// When to stop spinning the condensate
 // const Float aho = 1.0;                // harmonic length (in [L])
